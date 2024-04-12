@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: url('https://source.unsplash.com/random/1600x900?dark') no-repeat center center fixed;
+            background-size: cover;
+            transition: background 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .container {
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.8);
+            text-align: right;
+        }
+        button {
+            width: calc(25%  10px);
+            padding: 10px;
+            margin: 5px;
+            background-color: rgba(0, 123, 255, 0.8);
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: rgba(0, 123, 255, 1);
+        }
+        #result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator</h1>
+        <input type="text" id="input" placeholder="0" readonly>
+        <div class="keypad">
+            <button onclick="appendToInput('1')">1</button>
+            <button onclick="appendToInput('2')">2</button>
+            <button onclick="appendToInput('3')">3</button>
+            <button onclick="appendToInput('+')">+</button>
+            <button onclick="appendToInput('4')">4</button>
+            <button onclick="appendToInput('5')">5</button>
+            <button onclick="appendToInput('6')">6</button>
+            <button onclick="appendToInput('-')">-</button>
+            <button onclick="appendToInput('7')">7</button>
+            <button onclick="appendToInput('8')">8</button>
+            <button onclick="appendToInput('9')">9</button>
+            <button onclick="appendToInput('*')">*</button>
+            <button onclick="appendToInput('0')">0</button>
+            <button onclick="appendToInput('.')">.</button>
+            <button onclick="clearInput()">C</button>
+            <button onclick="appendToInput('/')">/</button>
+        </div>
+        <button onclick="calculateResult()">=</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        var inputField = document.getElementById('input');
+
+        function appendToInput(value) {
+            inputField.value += value;
+        }
+
+        function clearInput() {
+            inputField.value = '';
+        }
+
+        function calculateResult() {
+            var expression = inputField.value;
+            var result;
+            try {
+                result = eval(expression);
+                if (isNaN(result) || !isFinite(result)) {
+                    throw "Invalid expression";
+                }
+                displayResult(result);
+            } catch (error) {
+                displayResult('Error');
+            }
+        }
+
+        function displayResult(result) {
+            var bgColor = getComputedStyle(document.body).backgroundColor;
+            var brightness = calculateBrightness(bgColor);
+            var textColor = brightness > 128 ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+            document.getElementById('result').style.color = textColor;
+            document.getElementById('result').innerText = "Result: " + result;
+        }
+
+        function calculateBrightness(color) {
+            var r = parseInt(color.substring(4, color.indexOf(',')));
+            var g = parseInt(color.substring(color.indexOf(',') + 2, color.lastIndexOf(',')));
+            var b = parseInt(color.substring(color.lastIndexOf(',') + 2, color.lastIndexOf(')')));
+            var brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+            return brightness;
+        }
+    </script>
+</body>
+</html>
